@@ -1,4 +1,21 @@
-apt:
-  dev:
+dev:
+  apt:
     - libxml2-dev
     - libxslt1-dev
+    
+  pip:
+    - check-manifest
+    - coverage
+    - detox
+    - fmap
+    - lxml
+    - nose
+    - pip-tools
+    - Sphinx
+    - twine
+    - tox
+    - xunitmerge
+
+prod:
+  pip:
+    - fabric

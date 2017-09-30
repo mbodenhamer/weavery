@@ -6,7 +6,7 @@ PACKAGE = weavery
 IMAGE = mbodenhamer/${PACKAGE}-dev
 PYDEV = docker run --rm -it -e BE_UID=`id -u` -e BE_GID=`id -g` \
 	-v $(CURDIR):/app $(IMAGE)
-VERSIONS = 2.7.11
+VERSIONS = 2.7.14
 
 #-------------------------------------------------------------------------------
 # Docker image management
@@ -16,8 +16,9 @@ docker-build:
 
 docker-first-build:
 	@docker build -t $(IMAGE):latest --build-arg versions=$(VERSIONS) \
-	--build-arg reqs=requirements.in \
-	--build-arg devreqs=dev-requirements.in .
+	--build-arg reqs=requirements.yml .
+	@$(PYDEV) depman export dev -t pip -o dev-requirements.in
+	@$(PYDEV) depman export prod -t pip -o requirements.in
 	@$(PYDEV) pip-compile dev-requirements.in
 	@$(PYDEV) pip-compile requirements.in
 
