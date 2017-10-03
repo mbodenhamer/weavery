@@ -3,7 +3,7 @@ all: test
 VERSION = `cat version.txt | xargs`
 
 PACKAGE = weavery
-IMAGE = mbodenhamer/${PACKAGE}-dev
+IMAGE = mbodenhamer/${PACKAGE}-dev:latest
 PYDEV = docker run --rm -it -e BE_UID=`id -u` -e BE_GID=`id -g` \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v $(CURDIR):/app $(IMAGE)
@@ -69,13 +69,19 @@ pip-compile:
 #-------------------------------------------------------------------------------
 # Tests
 
+QUICK_TEST = nosetests -v --pdb --pdb-failures
+UNIT_TEST = $(QUICK_TEST) -w ${PACKAGE}
+
 test:
 	@$(PYDEV) coverage erase
 	@$(PYDEV) tox
 	@$(PYDEV) coverage html
 
 quick-test:
-	@$(PYDEV) bash -c "pip install . && nosetests -v --pdb --pdb-failures"
+	@$(PYDEV) $(QUICK_TEST)
+
+unit-test:
+	@$(PYDEV) $(UNIT_TEST)
 
 dist-test: build
 	@$(PYDEV) dist-test $(VERSION)
@@ -83,7 +89,7 @@ dist-test: build
 show:
 	@python -c "import webbrowser as wb; wb.open('htmlcov/index.html')"
 
-.PHONY: test quick-test dist-test show
+.PHONY: test quick-test unit-test dist-test show
 #-------------------------------------------------------------------------------
 # Cleanup
 
