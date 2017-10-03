@@ -7,6 +7,7 @@ dev:
     - check-manifest
     - coverage
     - detox
+    - dockerman>=0.1.1
     - fmap
     - lxml
     - nose

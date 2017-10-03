@@ -1,11 +1,12 @@
+Sphinx
 check-manifest
 coverage
 detox
+dockerman>=0.1.1
 fmap
 lxml
 nose
 pip-tools
-Sphinx
-twine
 tox
+twine
 xunitmerge

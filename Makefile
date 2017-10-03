@@ -34,7 +34,8 @@ docker-pull:
 docker-shell:
 	@$(PYDEV) bash
 
-.PHONY: docker-build docker-first-build docker-rmi docker-shell
+.PHONY: docker-build docker-first-build docker-rmi docker-push docker-pull
+.PHONY:	docker-shell
 #-------------------------------------------------------------------------------
 # Build management
 
