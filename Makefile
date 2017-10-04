@@ -3,10 +3,10 @@ all: test
 VERSION = `cat version.txt | xargs`
 
 PACKAGE = weavery
-IMAGE = mbodenhamer/${PACKAGE}-dev:latest
+IMAGE = mbodenhamer/${PACKAGE}-dev
 PYDEV = docker run --rm -it -e BE_UID=`id -u` -e BE_GID=`id -g` \
 	-v /var/run/docker.sock:/var/run/docker.sock \
-	-v $(CURDIR):/app $(IMAGE)
+	-v $(CURDIR):/app $(IMAGE):latest
 VERSIONS = 2.7.14
 
 #-------------------------------------------------------------------------------

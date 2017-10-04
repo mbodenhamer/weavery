@@ -15,7 +15,7 @@ coverage==4.4.1
 detox==0.11
 docker-pycreds==0.2.1     # via docker
 docker==2.5.1             # via dockerman
-dockerman==0.1.1
+dockerman==0.1.2
 docutils==0.14            # via sphinx
 enum-compat==0.0.2        # via eventlet
 enum34==1.1.6             # via enum-compat
