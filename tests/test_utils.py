@@ -65,4 +65,21 @@ def test1():
                         assert file.group_is(dpath, username)
                         assert file.mode_is(dpath, '750')
 
+                        assert not file.exists(fpath)
+                        ensure_file(fpath, '640', username, group='adm')
+                        assert file.is_file(fpath)
+                        assert file.owner_is(fpath, username)
+                        assert file.group_is(fpath, 'adm')
+                        assert file.mode_is(fpath, '640')
+                        
+                        ensure_absent(fpath)
+                        assert not file.exists(fpath)
+
+                        ensure_absent(dpath, dir=True)
+                        assert not file.dir_exists(dpath)
+
 #-------------------------------------------------------------------------------
+
+if __name__ == '__main__': # pragma: no cover
+    from syn.base_utils import run_all_tests
+    run_all_tests(globals(), verbose=True, print_errors=False)
