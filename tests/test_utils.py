@@ -4,7 +4,8 @@ from syn.base_utils import assign, setitem
 from envassert import group, user, file, detect
 
 from weavery import groups, users, success, success_sudo,\
-    ensure_group, ensure_user, ensure_file, ensure_absent
+    ensure_group, ensure_user, ensure_file, ensure_absent,\
+    start_service, apt_install, pip_install
 
 PASSWORD = '$6$KvP9PaWo.8UGts2t$xraIE4zQ2gU2NfahGEdKT8S4MQF6V7u684nRpEZM/2.tK.2PY2tGZSY3YEPhPKAU/HFadJdMigOmfVWkvXJ3X/' # 'password'
 
@@ -77,7 +78,19 @@ def test1():
 
                         ensure_absent(dpath, dir=True)
                         assert not file.dir_exists(dpath)
+                    
+                    # Services
+                    start_service('ssh')
+                    
+                    # Packages
+                    assert not success('which pip')
+                    apt_install(['python-pip'], update=True)
+                    assert success('which pip')
 
+                    assert not success('python -c "import fmap"')
+                    pip_install(['fmap'])
+                    assert success('python -c "import fmap"')
+                    
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__': # pragma: no cover

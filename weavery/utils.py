@@ -26,12 +26,14 @@ def success_sudo(cmd):
 #-------------------------------------------------------------------------------
 # Tasks
 
+# TODO: accept single string without error
 def apt_install(pkgs, update=False):
     if update:
         sudo('apt-get update')
     pstr = ' '.join(pkgs)
     sudo('apt-get install -y {}'.format(pstr))
 
+# TODO: accept single string without error
 def pip_install(pkgs):
     pstr = ' '.join(pkgs)
     sudo('pip install -U {}'.format(pstr))
