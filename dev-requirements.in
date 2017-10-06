@@ -2,8 +2,11 @@ Sphinx
 check-manifest
 coverage
 detox
-dockerman>=0.1.2
+dockerman
 fmap
+ipdb
+ipdbplugin
+ipython
 lxml
 nose
 pip-tools

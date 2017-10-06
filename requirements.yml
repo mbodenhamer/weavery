@@ -1,3 +1,7 @@
+includes:
+  dev:
+    - test
+
 dev:
   apt:
     - libxml2-dev
@@ -7,8 +11,10 @@ dev:
     - check-manifest
     - coverage
     - detox
-    - dockerman>=0.1.2
     - fmap
+    - ipdb
+    - ipdbplugin
+    - ipython
     - lxml
     - nose
     - pip-tools
@@ -16,6 +22,10 @@ dev:
     - twine
     - tox
     - xunitmerge
+
+test:
+  pip:
+    - dockerman
 
 prod:
   pip:
