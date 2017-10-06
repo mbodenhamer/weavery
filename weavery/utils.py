@@ -1,4 +1,4 @@
-from fabric.api import run, sudo
+from fabric.api import run, sudo, settings, hide
 
 #-------------------------------------------------------------------------------
 # Utilities
@@ -12,12 +12,16 @@ def users():
     return out.split()
 
 def success(cmd):
-    out = run(cmd)
-    return not bool(out.return_code)
+    with settings(warn_only=True):
+        with hide('everything'):
+            out = run(cmd)
+            return not bool(out.return_code)
 
 def success_sudo(cmd):
-    out = sudo(cmd)
-    return not bool(out.return_code)
+    with settings(warn_only=True):
+        with hide('everything'):
+            out = sudo(cmd)
+            return not bool(out.return_code)
 
 #-------------------------------------------------------------------------------
 # Tasks
@@ -34,11 +38,13 @@ def pip_install(pkgs):
 
 def create_group(grp):
     sudo('groupadd {}'.format(grp))
-
+    
 def ensure_group(grp):
     if grp not in groups():
         create_group(grp)
 
+# TODO: needs to ensure that user is a member of the groups in question
+# TODO: needs to ensure the existence of each group in question
 def create_user(usr, passwd, groups):
     ensure_group(usr)
     return success_sudo("useradd -m -g {} -G {} -p '{}' "

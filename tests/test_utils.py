@@ -1,10 +1,12 @@
-from fabric.tasks import execute
 from fabric.state import env
-from fabric.api import settings
 from dockerman import container
-from syn.base_utils import assign
+from syn.base_utils import assign, setitem
+from envassert import group, user, file, detect
 
-from weavery import groups, users, success, success_sudo
+from weavery import groups, users, success, success_sudo,\
+    ensure_group, ensure_user, ensure_file, ensure_absent
+
+PASSWORD = '$6$KvP9PaWo.8UGts2t$xraIE4zQ2gU2NfahGEdKT8S4MQF6V7u684nRpEZM/2.tK.2PY2tGZSY3YEPhPKAU/HFadJdMigOmfVWkvXJ3X/' # 'password'
 
 #-------------------------------------------------------------------------------
 
@@ -13,10 +15,54 @@ def test1():
         with assign(env, 'host_string', c.status.ip_addr):
             with assign(env, 'user', 'root'):
                 with assign(env, 'password', 'root'):
-                    c.poll(22)
+                    c.poll(22, timeout=10)
 
+                    # success / success_sudo
                     assert success('true')
-                    with settings(warn_only=True):
-                        assert not success('false')
+                    assert success_sudo('true')
+                    assert not success('false')
+                    assert not success_sudo('false')
+                
+                    # ensure_group
+                    groupname = 'foogroup'
+                    assert not group.is_exists(groupname)
+                    assert groupname not in groups()
+                    
+                    ensure_group(groupname)
+                    assert group.is_exists(groupname)
+                    assert groupname in groups()
+
+                    ensure_group(groupname)
+                    assert group.is_exists(groupname)
+                    
+                    # ensure_user
+                    username = 'foouser'
+                    assert not user.exists(username)
+                    assert username not in users()
+
+                    ensure_user(username, PASSWORD, 'adm,sudo')
+                    assert user.exists(username)
+                    assert username in users()
+
+                    assert user.is_belonging_group(username, username)
+                    assert user.is_belonging_group(username, 'adm')
+                    assert user.is_belonging_group(username, 'sudo')
+                    assert not user.is_belonging_group(username, 'root')
+
+                    ensure_user(username, PASSWORD, 'adm,sudo')
+                    assert user.exists(username)
+
+                    # ensure_file
+                    dpath = '/foo/bar'
+                    fpath = '/foo/bar/baz'
+
+                    # Because envassert is bugged
+                    with setitem(env, 'platform_family', detect.detect()):
+                        assert not file.dir_exists(dpath)
+                        ensure_file(dpath, '750', username, dir=True)
+                        assert file.dir_exists(dpath)
+                        assert file.owner_is(dpath, username)
+                        assert file.group_is(dpath, username)
+                        assert file.mode_is(dpath, '750')
 
 #-------------------------------------------------------------------------------
