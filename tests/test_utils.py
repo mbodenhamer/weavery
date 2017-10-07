@@ -1,3 +1,4 @@
+import os
 from fabric.state import env
 from dockerman import container
 from syn.base_utils import assign, setitem
@@ -8,7 +9,7 @@ from weavery import groups, users, success, success_sudo,\
     start_service, apt_install, pip_install
 
 MOCK = False
-LONG = False
+LONG = bool(int(os.environ.get('LONG_TESTS', '0')))
 
 PASSWORD = '$6$KvP9PaWo.8UGts2t$xraIE4zQ2gU2NfahGEdKT8S4MQF6V7u684nRpEZM/2.tK.2PY2tGZSY3YEPhPKAU/HFadJdMigOmfVWkvXJ3X/' # 'password'
 
@@ -29,9 +30,6 @@ def test1():
                     assert not success('false')
                     assert not success_sudo('false')
                 
-                    if not LONG:
-                        return
-                    
                     # ensure_group
                     groupname = 'foogroup'
                     assert not group.is_exists(groupname)
@@ -86,6 +84,9 @@ def test1():
 
                         ensure_absent(dpath, dir=True)
                         assert not file.dir_exists(dpath)
+                    
+                    if not LONG:
+                        return
                     
                     # Services
                     start_service('ssh')
