@@ -9,6 +9,7 @@ python:
 env:
     global:
         - DOCKER_VERSION=17.06.2~ce-0~ubuntu
+        - LONG_TESTS=1
 
 before_install:
   - sudo apt-cache madison docker-ce
