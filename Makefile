@@ -70,7 +70,7 @@ pip-compile:
 #-------------------------------------------------------------------------------
 # Tests
 
-QUICK_TEST = nosetests -v --pdb --pdb-failures
+QUICK_TEST = nosetests -s -v --pdb --pdb-failures
 UNIT_TEST = $(QUICK_TEST) -w ${PACKAGE}
 
 test:

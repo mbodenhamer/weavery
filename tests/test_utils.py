@@ -7,9 +7,14 @@ from weavery import groups, users, success, success_sudo,\
     ensure_group, ensure_user, ensure_file, ensure_absent,\
     start_service, apt_install, pip_install
 
+MOCK = False
+LONG = False
+
 PASSWORD = '$6$KvP9PaWo.8UGts2t$xraIE4zQ2gU2NfahGEdKT8S4MQF6V7u684nRpEZM/2.tK.2PY2tGZSY3YEPhPKAU/HFadJdMigOmfVWkvXJ3X/' # 'password'
 
 #-------------------------------------------------------------------------------
+
+# TODO: implement mock tests
 
 def test1():
     with container('rastasheep/ubuntu-sshd') as c:
@@ -24,6 +29,9 @@ def test1():
                     assert not success('false')
                     assert not success_sudo('false')
                 
+                    if not LONG:
+                        return
+                    
                     # ensure_group
                     groupname = 'foogroup'
                     assert not group.is_exists(groupname)
